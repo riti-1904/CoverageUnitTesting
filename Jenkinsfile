@@ -16,22 +16,21 @@ pipeline {
 
         stage('Build') {
             steps {
-              
-             
+                echo 'Building the application...'
                 bat """
+                    mvn clean package ^
                     -Dsonar.projectKey=Unittestpipeline ^
                     -Dsonar.sources=. ^
                     -Dsonar.host.url=http://localhost:9000 ^
-                    -Dsonar.token=sqp_f6f9ab3d4a12074b79aa04dd32d4be77bd01bb08 ^
+                    -Dsonar.token=$SONAR_TOKEN
                 """
-
             }
         }
 
         stage('Unit Tests') {
             steps {
                 echo 'Running unit tests...'
-                sh 'mvn test'  // Runs the unit tests
+                bat 'mvn test'  // Runs the unit tests on Windows
             }
         }
 
@@ -40,13 +39,12 @@ pipeline {
                 script {
                     echo 'Starting SonarQube analysis...'
                     withSonarQubeEnv(SONARQUBE_SERVER) {  // Use the configured SonarQube server
-                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'  // Run SonarQube analysis
+                        bat 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'  // Run SonarQube analysis on Windows
                     }
                 }
             }
         }
-
-
+    }
 
     post {
         always {
@@ -55,4 +53,4 @@ pipeline {
         }
     }
 }
-}
+
