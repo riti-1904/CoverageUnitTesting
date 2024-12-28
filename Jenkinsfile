@@ -22,7 +22,7 @@ pipeline {
                     -Dsonar.projectKey=Unittestpipeline ^
                     -Dsonar.sources=. ^
                     -Dsonar.host.url=http://localhost:9000 ^
-                    -Dsonar.token=$SONAR_TOKEN
+                    -Dsonar.token=%SONAR_TOKEN%
                 """
             }
         }
@@ -39,7 +39,7 @@ pipeline {
                 script {
                     echo 'Starting SonarQube analysis...'
                     withSonarQubeEnv(SONARQUBE_SERVER) {  // Use the configured SonarQube server
-                        bat 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'  // Run SonarQube analysis on Windows
+                        bat 'mvn sonar:sonar -Dsonar.login=%SONAR_TOKEN%'  // Run SonarQube analysis on Windows
                     }
                 }
             }
